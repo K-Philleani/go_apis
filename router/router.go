@@ -8,7 +8,7 @@ import (
 
 func Routers() *gin.Engine{
 	router := gin.Default()
-	router.Use(cors())
+	//router.Use(cors())
 
 	account := router.Group("/")
 	{
