@@ -32,5 +32,16 @@ func (a *Account) GetAccount() (id int, user Account, err error) {
 	}
 	id = user.Id
 	return
+
+}
+
+// 查询全部账号
+func (a *Account) GetAccountAll() (list []Account, err error) {
+	result := conn.DB.Table("account").Find(&list)
+	err = result.Error
+	if err != nil {
+		return
+	}
+	return
 }
 

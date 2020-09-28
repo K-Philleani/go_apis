@@ -123,3 +123,24 @@ func Login(c *gin.Context) {
 	})
 
 }
+
+// 查询全部账号
+
+func GetAccountAll(c *gin.Context) {
+	var account models.Account
+	list, err := account.GetAccountAll()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 1,
+			"message": "查询失败",
+			"err": err,
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "查询成功",
+		"userList": list,
+	})
+
+}

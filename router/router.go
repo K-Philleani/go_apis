@@ -15,6 +15,7 @@ func Routers() *gin.Engine{
 		account.POST("/create", apis.CreateAccount)
 		account.GET("/get", apis.GetAccount)
 		account.POST("/login", apis.Login)
+		account.GET("/getAll", apis.GetAccountAll)
 	}
 
 	return router
