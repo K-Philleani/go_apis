@@ -2,7 +2,7 @@ FROM alpine:latest
 
 WORKDIR /go/app
 
-COPY ..
+COPY . .
 
 EXPOSE 9090
 
