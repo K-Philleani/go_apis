@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go_apis/models"
 	"log"
+	"strconv"
 )
 
 type Info struct {
@@ -125,7 +126,6 @@ func Login(c *gin.Context) {
 }
 
 // 查询全部账号
-
 func GetAccountAll(c *gin.Context) {
 	var account models.Account
 	list, err := account.GetAccountAll()
@@ -141,6 +141,33 @@ func GetAccountAll(c *gin.Context) {
 		"code": 1,
 		"message": "查询成功",
 		"userList": list,
+	})
+}
+
+// 删除账号
+func DeleteAccount(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("user_id"))
+	if err != nil {
+		log.Println("获取参数失败")
+		return
+	}
+
+	account := models.Account{
+		Id: id,
+	}
+	row, err := account.DeleteAccount()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 0,
+			"message": "删除失败",
+			"err": err,
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "删除成功",
+		"id": row,
 	})
 
 }

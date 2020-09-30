@@ -45,3 +45,13 @@ func (a *Account) GetAccountAll() (list []Account, err error) {
 	return
 }
 
+// 删除账号
+func (a *Account) DeleteAccount() (row int64,err error) {
+	result := conn.DB.Table("account").Delete(&a, a.Id)
+	err = result.Error
+	if err != nil {
+		return
+	}
+	row = result.RowsAffected
+	return
+}
