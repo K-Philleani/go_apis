@@ -9,7 +9,7 @@ import (
 func Routers() *gin.Engine{
 	router := gin.Default()
 	router.Use(middleware.Cors())
-
+	// 路由分组
 	account := router.Group("/")
 	{
 		account.POST("/create", apis.CreateAccount)
