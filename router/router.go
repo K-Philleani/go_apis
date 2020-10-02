@@ -17,6 +17,7 @@ func Routers() *gin.Engine{
 		account.POST("/login", apis.Login)
 		account.GET("/getAll", apis.GetAccountAll)
 		account.GET("/delete", apis.DeleteAccount)
+		account.POST("/update", apis.UpdateAccount)
 	}
 
 	return router

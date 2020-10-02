@@ -3,12 +3,15 @@ package apis
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go_apis/JWT"
 	"go_apis/models"
 	"log"
+	"net/http"
 	"strconv"
 )
 
 type Info struct {
+	UserIdAxios    		int 	`json:"userId"`
 	UserAccountAxios 	string 	`json:"userAccount"`
 	UserPwdOAxios 		string 	`json:"userPwd"`
 	UserPhoneOAxios 	string 	`json:"userPhone"`
@@ -16,17 +19,13 @@ type Info struct {
 
 // 新建账号
 func CreateAccount(c *gin.Context) {
-	var info Info
-	err := c.Bind(&info)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
+	userAccount := c.PostForm("userAccount")
+	userPwd := c.PostForm("userPwd")
+	userPhone := c.PostForm("userPhone")
 	account := models.Account{
-		UserAccount: info.UserAccountAxios,
-		UserPwd: info.UserPwdOAxios,
-		UserPhone: info.UserPhoneOAxios,
+		UserAccount: userAccount,
+		UserPwd: userPwd,
+		UserPhone: userPhone,
 	}
 	id, _, err := account.GetAccount()
 	fmt.Println(id)
@@ -52,6 +51,7 @@ func CreateAccount(c *gin.Context) {
 		})
 		panic("新建账户失败， err:")
 	}
+
 	c.JSON(200, gin.H{
 		"code": 1,
 		"message":"新建账号成功",
@@ -76,6 +76,7 @@ func GetAccount(c *gin.Context) {
 		})
 		return
 	}
+
 	c.JSON(200, gin.H{
 		"code": 1,
 		"message": "查询账号成功",
@@ -86,15 +87,11 @@ func GetAccount(c *gin.Context) {
 
 // 登录
 func Login(c *gin.Context) {
-	var info Info
-	err := c.Bind(&info)
-	if err != nil {
-		log.Println(err)
-		return
-	}
+	userAccount := c.PostForm("userAccount")
+	userPwd := c.PostForm("userPwd")
 	account := models.Account{
-		UserAccount: info.UserAccountAxios,
-		UserPwd: info.UserPwdOAxios,
+		UserAccount: userAccount,
+		UserPwd: userPwd,
 	}
 	id, user, err := account.GetAccount()
 	if err != nil {
@@ -109,7 +106,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
-	if info.UserPwdOAxios != user.UserPwd {
+	if userPwd != user.UserPwd {
 		c.JSON(200, gin.H{
 			"code": 0,
 			"message": "密码错误",
@@ -117,10 +114,21 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+	token, err := JWT.ReleaseToken(account)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": -1,
+			"message": "系统异常",
+		})
+		log.Println(err)
+		return
+	}
 	c.JSON(200, gin.H{
 		"code": 1,
 		"message": "登录成功",
 		"user_account": user.UserAccount,
+		"token": token,
+
 	})
 
 }
@@ -167,7 +175,37 @@ func DeleteAccount(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"code": 1,
 		"message": "删除成功",
-		"id": row,
+		"row": row,
 	})
+}
 
+// 更新账号数据
+func UpdateAccount(c *gin.Context) {
+	userId, err := strconv.Atoi(c.PostForm("userId"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	userPwd := c.PostForm("userPwd")
+	userPhone := c.PostForm("userPhone")
+	account := models.Account{
+		Id: userId,
+		UserPwd: userPwd,
+		UserPhone: userPhone,
+	}
+	row, err := account.UpdateAccount()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 0,
+			"message": "更新失败",
+			"err": err,
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "更新成功",
+		"row": row,
+	})
 }

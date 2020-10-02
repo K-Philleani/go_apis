@@ -55,3 +55,18 @@ func (a *Account) DeleteAccount() (row int64,err error) {
 	row = result.RowsAffected
 	return
 }
+
+// 更新账号数据
+func (a *Account) UpdateAccount() (row int64, err error) {
+	result := conn.DB.Table("account").Model(&a).Updates(&Account{
+		UserAccount: a.UserAccount,
+		UserPwd: a.UserPwd,
+		UserPhone: a.UserPhone,
+	})
+	err = result.Error
+	if err != nil {
+		return
+	}
+	row = result.RowsAffected
+	return
+}
