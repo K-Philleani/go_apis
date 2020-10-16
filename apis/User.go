@@ -70,4 +70,69 @@ func UpdateRow(c *gin.Context) {
 		UserPwd: req.Pwd,
 	}
 	err = user.UpdateRow()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 0,
+			"message": "更新失败",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "更新成功",
+	})
+
+}
+
+// 删除数据
+func DeleteRow(c *gin.Context) {
+	var req Request
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		log.Printf("params failed, err:%v", err)
+		return
+	}
+	user := models.User{
+		Id: req.Id,
+	}
+	err = user.DeleteRow()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 0,
+			"message": "删除失败",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "删除成功",
+	})
+}
+
+// 创建数据
+func CreateRow(c *gin.Context) {
+	var req Request
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		log.Printf("params failed, err:%v", err)
+		return
+	}
+	user := models.User{
+		UserName: req.UserName,
+		UserPwd: req.Pwd,
+	}
+	n, err := user.CreateRow()
+	if err != nil {
+		c.JSON(200, gin.H{
+			"code": 0,
+			"message": "创建失败",
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"code": 1,
+		"message": "创建成功",
+		"num": n,
+	})
+
 }

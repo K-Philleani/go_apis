@@ -25,6 +25,8 @@ func Routers() *gin.Engine{
 		user.GET("/userinfo", apis.GetUserInfo)
 		user.POST("/userRow", apis.GetUserRow)
 		user.POST("/updateRow", apis.UpdateRow)
+		user.POST("/deleteRow", apis.DeleteRow)
+		user.POST("/createRow", apis.CreateRow)
 	}
 
 	return router
