@@ -209,3 +209,4 @@ func UpdateAccount(c *gin.Context) {
 		"row": row,
 	})
 }
+

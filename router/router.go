@@ -20,6 +20,13 @@ func Routers() *gin.Engine{
 		account.POST("/update", apis.UpdateAccount)
 	}
 
+	user := router.Group("/user")
+	{
+		user.GET("/userinfo", apis.GetUserInfo)
+		user.POST("/userRow", apis.GetUserRow)
+		user.POST("/updateRow", apis.UpdateRow)
+	}
+
 	return router
 }
 
