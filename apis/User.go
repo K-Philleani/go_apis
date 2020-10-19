@@ -20,6 +20,7 @@ func GetUserInfo(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"code": 0,
 			"message": "查询失败",
+			"err": err,
 		})
 		return
 	}

@@ -9,7 +9,7 @@ import (
 )
 
 var DB *gorm.DB
-const dsn string = "root:123456@(124.70.71.78:3306)/Stitches?charset=utf8mb4&parseTime=True&loc=Local"
+const dsn string = "root:123456@(124.70.71.78:3306)/funk?charset=utf8mb4&parseTime=True&loc=Local"
 
 func init() {
 	var err error
